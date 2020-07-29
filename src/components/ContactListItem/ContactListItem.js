@@ -14,7 +14,7 @@ const ContactListItem = ({ contacts, onDelete}) => (
         type='button'
           className={styles.button}
           id={id}
-          onClick={ onDelete}
+          onClick={()=> onDelete(id)}
         >
           <Icon />
         </button>
