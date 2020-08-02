@@ -43,7 +43,6 @@ class Form extends Component {
   };
 
   render() {
-    console.log(this.props.contacts);
     const { name, number } = this.state;
     return (
       <>
