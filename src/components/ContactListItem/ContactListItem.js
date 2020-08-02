@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { deleteContact } from '../../redux/phonebook/phonebook-actions';
 import styles from './ContactListItem.module.css';
-import IconButton from '../IconButton/IconButton';
 import { ReactComponent as Icon } from '../../theme/icons/icon.svg';
 
 const ContactListItem = ({ contacts, onDelete}) => (
@@ -28,6 +27,7 @@ const getVisibleContacts = (allContacts, filter) => {
     name.toLowerCase().includes(normolizeContact),
   );
 };
+
 const mapStateToProps = ({ phonebook: { contacts, filter } }) => ({
   contacts: getVisibleContacts(contacts, filter),
 });

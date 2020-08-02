@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import { addContact } from '../../redux/phonebook/phonebook-actions';
 import styles from './Form.module.css';
+import 'react-toastify/dist/ReactToastify.css';
+
 class Form extends Component {
   static propTypes = {
     state: propTypes.objectOf(propTypes.string.isRequired),
@@ -16,13 +19,23 @@ class Form extends Component {
     this.setState({ [name]: value });
   };
   handleSubmit = e => {
+    const notifyDublicate = () => toast('This contact already exist');
+    const notifyEmptyInput = ()=> toast('enter name and number')
+    const isDublicate = this.props.contacts.some(
+      contact => contact.name === this.state.name,
+    );
     e.preventDefault();
-    if (this.state.name && this.state.number !== '') {
-      this.props.onSubmit(this.state);
-      this.resetForm();
-      return;
+    if (this.state.name  && this.state.number !== '') {
+      if (isDublicate) {
+        notifyDublicate();
+      } else {
+        this.props.onSubmit(this.state);
+        this.resetForm();
+        return;
+      }
+    } else {
+      notifyEmptyInput()
     }
-    alert('enter name and number');
   };
 
   resetForm = () => {
@@ -30,8 +43,10 @@ class Form extends Component {
   };
 
   render() {
+    console.log(this.props.contacts);
     const { name, number } = this.state;
     return (
+      <>
       <form onSubmit={this.handleSubmit} className={styles.form}>
         <div className={styles.inputWrapper}>
           <label className={styles.label}>
@@ -60,11 +75,16 @@ class Form extends Component {
           add contact
         </button>
       </form>
+      <ToastContainer />
+      </>
     );
   }
 }
 
-const mapDispatchToPtroms = dispatch => ({
+const mapStateToProps = state => ({
+  contacts: state.phonebook.contacts,
+});
+const mapDispatchToProps = dispatch => ({
   onSubmit: data => dispatch(addContact(data)),
 });
-export default connect(null, mapDispatchToPtroms)(Form);
+export default connect(mapStateToProps, mapDispatchToProps)(Form);
